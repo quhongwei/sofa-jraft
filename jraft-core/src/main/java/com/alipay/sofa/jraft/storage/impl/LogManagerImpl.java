@@ -16,6 +16,10 @@
  */
 package com.alipay.sofa.jraft.storage.impl;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -463,10 +467,14 @@ public class LogManagerImpl implements LogManager {
         LogId flush() {
 
             try {
-                String delayStr = System.getProperty("jraft.fush.delay");
+                //BuffedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream(),"utf-8"));
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("/home/admin/flushdelay.txt")));
+                String delayStr = reader.readLine();
+                reader.close();
 
                 if (StringUtil.isNullOrEmpty(delayStr)) {
-                    LOG.info("jraft.fush.delay = " + delayStr);
+                    LOG.info("sleep jraft.fush.delay=" + delayStr);
                     Thread.sleep(Long.valueOf(delayStr));
                 } else {
                     LOG.info("jraft.fush.delay is empty ");
