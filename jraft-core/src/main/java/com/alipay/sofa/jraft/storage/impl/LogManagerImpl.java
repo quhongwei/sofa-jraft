@@ -27,6 +27,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import io.netty.util.internal.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -460,6 +461,20 @@ public class LogManagerImpl implements LogManager {
         }
 
         LogId flush() {
+
+            try {
+                String delayStr = System.getProperty("jraft.fush.delay");
+
+                if (StringUtil.isNullOrEmpty(delayStr)) {
+                    LOG.info("jraft.fush.delay = " + delayStr);
+                    Thread.sleep(Long.valueOf(delayStr));
+                } else {
+                    LOG.info("jraft.fush.delay is empty ");
+                }
+            } catch (Throwable t) {
+                LOG.error(t.getMessage(), t);
+            }
+
             if (this.size > 0) {
                 this.lastId = appendToStorage(this.toAppend);
                 for (int i = 0; i < this.size; i++) {
