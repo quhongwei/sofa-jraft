@@ -469,15 +469,16 @@ public class LogManagerImpl implements LogManager {
             try {
                 //BuffedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream(),"utf-8"));
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("/home/admin/flushdelay.txt")));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(
+                    "/home/admin/flushdelay.txt")));
                 String delayStr = reader.readLine();
                 reader.close();
 
                 if (StringUtil.isNullOrEmpty(delayStr)) {
+                    LOG.info("jraft.fush.delay is empty ");
+                } else {
                     LOG.info("sleep jraft.fush.delay=" + delayStr);
                     Thread.sleep(Long.valueOf(delayStr));
-                } else {
-                    LOG.info("jraft.fush.delay is empty ");
                 }
             } catch (Throwable t) {
                 LOG.error(t.getMessage(), t);
